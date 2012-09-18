@@ -1,15 +1,15 @@
 # -*- encoding: utf-8 -*-
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'hobson/cli/version'
+require 'hobson/client/version'
 
 Gem::Specification.new do |gem|
-  gem.name          = "hobson-cli"
+  gem.name          = "hobson-client"
   gem.version       = Hobson::Cli::VERSION
   gem.authors       = ["Jared Grippe"]
   gem.email         = ["jared@deadlyicon.com"]
-  gem.description   = %q{a cli for hobson-server}
-  gem.summary       = %q{a cli for hobson-server}
+  gem.description   = %q{a client for hobson-server}
+  gem.summary       = %q{a client for hobson-server}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($/)
