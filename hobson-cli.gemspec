@@ -18,5 +18,6 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_runtime_dependency "rest-client"
+  gem.add_runtime_dependency "launchy"
 
 end

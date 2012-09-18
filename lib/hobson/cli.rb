@@ -2,6 +2,7 @@ require "rest_client"
 require "yaml"
 require "irb"
 require "json"
+require "launchy"
 
 Signal.trap("INT") { puts; exit(1) }
 
@@ -10,7 +11,9 @@ module Hobson
 
     def initialize
       response = server['test_runs'].post(test_run: test_run_data)
-      p JSON.parse(response)
+      data = JSON.parse(response)
+      puts data.to_yaml
+      Launchy.open data['test_run']['url']
     end
 
     def test_run_data
