@@ -13,7 +13,7 @@ module Hobson
       response = server['test_runs'].post(test_run: test_run_data)
       data = JSON.parse(response)
       puts data.to_yaml
-      Launchy.open data['test_run']['url']
+      Launchy.open server[data['test_run']['path']].url
     end
 
     def test_run_data
@@ -25,7 +25,9 @@ module Hobson
     end
 
     def server
-      @server ||= RestClient::Resource.new(config[:server])
+      @server ||= RestClient::Resource.new(config[:server], :headers => {
+        :accept => 'application/json, text/javascript, */*; q=0.01'
+      })
     end
 
     def config
