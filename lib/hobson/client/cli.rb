@@ -1,6 +1,4 @@
 require "hobson/client"
-require "rest_client"
-require "yaml"
 require "irb"
 require "json"
 require "launchy"
@@ -10,28 +8,12 @@ Signal.trap("INT") { puts; exit(1) }
 class Hobson::Client::Cli
 
   def initialize
-    response = server['test_runs'].post(test_run: test_run_data)
-    data = JSON.parse(response)
-    puts data.to_yaml
-    Launchy.open server[data['test_run']['path']].url
-  end
-
-  def test_run_data
-    {
+    test_run = Hobson::Client::TestRun.create({
       'project_origin' => project_origin,
       'sha'            => sha,
       'requestor'      => requestor,
-    }
-  end
-
-  def server
-    @server ||= RestClient::Resource.new(config[:server], :headers => {
-      :accept => 'application/json, text/javascript, */*; q=0.01'
     })
-  end
-
-  def config
-    @config ||= YAML.load_file('config/hobson.yml')
+    Launchy.open test_run.url
   end
 
   def project_origin
