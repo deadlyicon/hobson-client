@@ -1,5 +1,5 @@
 class Hobson::Client::TestRun::Job < Hobson::Client::Resource
 
-  @name = :job
+  self.resource_name = :job
 
 end

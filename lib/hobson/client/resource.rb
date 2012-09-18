@@ -1,28 +1,56 @@
-require 'ostruct'
+class Hobson::Client::Resource
 
-class Hobson::Client::Resource < OpenStruct
+  class << self
+    attr_accessor :resource_name
 
-  def self.resource
-    Hobson::Client.server["#{@name}s"]
-  end
+    def resource
+      Hobson::Client.server["#{resource_name}s"]
+    end
 
-  def self.create data
-    new JSON.parse(resource.post("#{@name}" => data))["#{@name}"]
-  end
+    def create data
+      new JSON.parse(resource.post("#{resource_name}" => data))["#{resource_name}"]
+    end
 
-  def self.get id
-    new JSON.parse(resource[id].get)["#{@name}"]
-  end
+    def get id
+      new JSON.parse(resource[id].get)["#{resource_name}"]
+    end
 
-  def self.nested_resource name, options
-    resource = options[:class]
-    class_eval <<-RUBY, __FILE__, __LINE__ + 1
-      def #{name}
-        @#{name} ||= @table[:#{name}].map do |data|
-          #{resource}.new(data)
-        end
+    def attributes *names
+      @@attributes ||= Set[]
+      unless names.empty?
+        @@attributes += names.to_set
+        attr_accessor *names
       end
-    RUBY
+      @@attributes
+    end
+
+    def nested_resource name, options
+      resource = options[:class]
+      class_eval <<-RUBY, __FILE__, __LINE__ + 1
+        def #{name}
+          @#{name} ||= @table[:#{name}].map do |data|
+            #{resource}.new(data)
+          end
+        end
+      RUBY
+    end
+
+  end
+
+  def initialize attributes
+    attributes.each_pair do |key, value|
+      instance_variable_set(:"@#{key}", value)
+    end
+  end
+
+  def attributes
+    self.class.attributes.inject({}) do |hash, attribute|
+      hash.update(attribute => instance_variable_get(:"@#{attribute}"))
+    end
+  end
+
+  def save
+    puts self.class.resource[id].put("#{self.class.resource_name}" => attributes)
   end
 
 
