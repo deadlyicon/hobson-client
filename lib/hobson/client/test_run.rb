@@ -1,6 +1,6 @@
 class Hobson::Client::TestRun < Hobson::Client::Resource
 
-  self.resource_name = :test_run
+  resource_name :test_run
 
   attributes :id, :path, :project_origin, :sha, :requestor, :created_at
 

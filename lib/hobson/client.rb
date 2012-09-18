@@ -5,6 +5,10 @@ require "json"
 module Hobson
   module Client
 
+    class << self
+      attr_writer :config
+    end
+
     def self.config
       @config ||= YAML.load_file('config/hobson.yml')
     end

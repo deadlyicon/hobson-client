@@ -6,3 +6,7 @@ gemspec
 group :development do
   gem 'debugger'
 end
+
+group :test do
+  gem 'rspec'
+end

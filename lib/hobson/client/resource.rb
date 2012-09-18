@@ -1,7 +1,11 @@
 class Hobson::Client::Resource
 
   class << self
-    attr_accessor :resource_name
+
+    def resource_name resource_name=nil
+      @resource_name = resource_name unless resource_name.nil?
+      @resource_name
+    end
 
     def resource
       Hobson::Client.server["#{resource_name}s"]
@@ -16,20 +20,24 @@ class Hobson::Client::Resource
     end
 
     def attributes *names
-      @@attributes ||= Set[]
+      @attributes ||= Set[]
       unless names.empty?
-        @@attributes += names.to_set
+        @attributes += names.to_set
         attr_accessor *names
       end
-      @@attributes
+      @attributes
     end
 
-    def nested_resource name, options
-      resource = options[:class]
+    def nested_resource attribute, options
+      # @@nested_resources ||= Set[]
+      # options[:attribute] = attribute
+      # @@nested_resources << options
+
+      klass = options[:class]
       class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def #{name}
-          @#{name} ||= @table[:#{name}].map do |data|
-            #{resource}.new(data)
+        def #{attribute}
+          @#{attribute}.map! do |instance|
+            instance.is_a?(#{klass}) ? instance : #{klass}.new(instance)
           end
         end
       RUBY
