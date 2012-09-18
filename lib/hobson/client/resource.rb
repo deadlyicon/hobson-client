@@ -14,6 +14,16 @@ class Hobson::Client::Resource < OpenStruct
     new JSON.parse(resource[id].get)["#{@name}"]
   end
 
+  def self.nested_resource name, options
+    resource = options[:class]
+    class_eval <<-RUBY, __FILE__, __LINE__ + 1
+      def #{name}
+        @#{name} ||= @table[:#{name}].map do |data|
+          #{resource}.new(data)
+        end
+      end
+    RUBY
+  end
 
 
   def url
