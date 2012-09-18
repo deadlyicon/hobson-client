@@ -1,17 +1,7 @@
 require 'ostruct'
 
-class Hobson::Client::TestRun < OpenStruct
+class Hobson::Client::TestRun < Hobson::Client::Resource
 
-  def self.resource
-    Hobson::Client.server['test_runs']
-  end
-
-  def self.create data
-    new JSON.parse(resource.post(test_run: data))['test_run']
-  end
-
-  def url
-    Hobson::Client.server[path].url
-  end
+  @name = :test_run
 
 end

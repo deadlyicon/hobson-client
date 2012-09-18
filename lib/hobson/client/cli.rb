@@ -1,6 +1,5 @@
 require "hobson/client"
 require "irb"
-require "json"
 require "launchy"
 
 Signal.trap("INT") { puts; exit(1) }

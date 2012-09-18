@@ -1,5 +1,6 @@
 require "rest_client"
 require "yaml"
+require "json"
 
 module Hobson
   module Client
@@ -17,5 +18,6 @@ module Hobson
   end
 end
 
+require "hobson/client/resource"
 require "hobson/client/test_run"
 
